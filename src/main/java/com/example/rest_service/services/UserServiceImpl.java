@@ -3,6 +3,7 @@ package com.example.rest_service.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.example.rest_service.dtos.ApiResponseDto;
@@ -19,9 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class UserServiceImpl implements UserService {
-
     @Autowired
-    private UserRepository userRepository;
+    private  UserRepository userRepository;
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
 
     @Override
     public ResponseEntity<ApiResponseDto<?>> registerUser(UserDetailsRequestDto newUserDetails)
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService {
             }
 
             User newUser = new User(
-                    newUserDetails.getUserName(), newUserDetails.getName(), newUserDetails.getPassword());
+                    newUserDetails.getUserName(), newUserDetails.getName(), passwordEncoder.encode(newUserDetails.getPassword()) );
 
             // save() is an in built method given by JpaRepository
             userRepository.save(newUser);

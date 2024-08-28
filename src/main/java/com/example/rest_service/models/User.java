@@ -1,5 +1,14 @@
 package com.example.rest_service.models;
 
+import java.util.Collection;
+
+import java.util.List; 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,10 +28,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "USER", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "name"),
-        @UniqueConstraint(columnNames = "password")
 })
 
-public class User {
+public class User implements UserDetails{
 
     public User(String userName2, String name2, String password2) {
         this.name = name2;
@@ -45,5 +53,10 @@ public class User {
     @NotBlank
     @Size(min = 8)
     private String password;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return List.of(new SimpleGrantedAuthority("ADMIN"));
+    }
 
 }
